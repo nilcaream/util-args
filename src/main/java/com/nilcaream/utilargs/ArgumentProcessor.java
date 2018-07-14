@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Krzysztof Smigielski
+ * Copyright 2018 Krzysztof Smigielski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ import java.util.*;
 
 /**
  * POSIX-style argument parser. Contains minimal subset of POSIX-1.2008 standard.
- * <p/>
+ * <p>
  * This class is stateful and is not thread-safe.
- * <p/>
+ * <p>
  * Krzysztof Smigielski 10/28/12 7:31 PM
  */
 public class ArgumentProcessor {

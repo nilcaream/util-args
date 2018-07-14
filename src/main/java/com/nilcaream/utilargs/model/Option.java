@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Krzysztof Smigielski
+ * Copyright 2018 Krzysztof Smigielski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * Field annotation used to indicate that this field should be used for automatic
  * argument binding. Name value should be unique within annotated object.
- * <p/>
+ * <p>
  * Krzysztof Smigielski 10/28/12 7:32 PM
  */
 @Retention(RetentionPolicy.RUNTIME)

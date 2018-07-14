@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Krzysztof Smigielski
+ * Copyright 2018 Krzysztof Smigielski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import java.lang.reflect.Field;
 
 /**
  * Command line argument wrapper with associated argument, option and wrapping object field.
- * <p/>
+ * <p>
  * Krzysztof Smigielski 10/28/12 7:39 PM
  */
 public class Parameter implements Comparable<Parameter> {

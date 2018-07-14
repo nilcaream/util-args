@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Krzysztof Smigielski
+ * Copyright 2018 Krzysztof Smigielski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import java.lang.reflect.Modifier;
 
 /**
  * Binder that uses static valueOf method. Suitable for primitives types and their wrapper classes.
- * <p/>
+ * <p>
  * Krzysztof Smigielski 10/30/12 7:47 PM
  */
 public class StaticValueOfBinder implements ArgumentBinder {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Krzysztof Smigielski
+ * Copyright 2018 Krzysztof Smigielski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import static org.fest.assertions.Assertions.assertThat;
 
 /**
  * TODO
- * <p/>
+ * <p>
  * Krzysztof Smigielski 1/27/13 1:44 PM
  */
 public abstract class AbstractBinderTest {

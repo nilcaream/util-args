@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Krzysztof Smigielski
+ * Copyright 2018 Krzysztof Smigielski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import java.lang.reflect.Field;
 
 /**
  * Binder that uses constructor with String argument.
- * <p/>
+ * <p>
  * Krzysztof Smigielski 10/30/12 7:49 PM
  */
 public class StringConstructorBinder implements ArgumentBinder {

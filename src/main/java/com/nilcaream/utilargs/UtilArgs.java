@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Krzysztof Smigielski
+ * Copyright 2018 Krzysztof Smigielski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ import com.nilcaream.utilargs.core.StringConstructorBinder;
  * Main, single-use, stateful class for processing command line arguments and automatic binding
  * to user-provided object. Uses predefined set of {@link com.nilcaream.utilargs.core.ArgumentBinder}
  * instances.
- * <p/>
+ * <p>
  * For more control over the binding process consider using {@link ArgumentProcessor}.
- * <p/>
+ * <p>
  * Krzysztof Smigielski 10/28/12 7:29 PM
  *
  * @see <a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html">http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html</a>
@@ -39,7 +39,7 @@ public class UtilArgs {
     /**
      * Resolves given arguments and updates user-provided object fields. The object fields should be
      * annotated with {@link com.nilcaream.utilargs.model.Option} annotation. They don't have to be public.
-     * <p/>
+     * <p>
      * This constructor will never throw an exception when field binding process fails.
      *
      * @param arguments command line arguments

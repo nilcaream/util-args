@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Krzysztof Smigielski
+ * Copyright 2018 Krzysztof Smigielski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import org.junit.Test;
 
 /**
  * TODO
- * <p/>
+ * <p>
  * Krzysztof Smigielski 1/31/13 10:18 PM
  */
 public class BooleanIntegerFunctionalTest extends AbstractFunctionalTest {

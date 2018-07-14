@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Krzysztof Smigielski
+ * Copyright 2018 Krzysztof Smigielski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import org.junit.Before;
 
 /**
  * TODO
- * <p/>
+ * <p>
  * Krzysztof Smigielski 10/30/12 8:22 PM
  */
 public class PrimitivesBinderTest extends AbstractStaticValueOfBinderTest {
