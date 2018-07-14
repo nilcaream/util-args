@@ -1,0 +1,6 @@
+.idea
+*.jar
+*.tmp
+*.zip
+*.iml
+.mvn
