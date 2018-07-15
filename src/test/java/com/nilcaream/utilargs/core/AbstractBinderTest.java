@@ -20,7 +20,7 @@ import com.nilcaream.utilargs.model.Parameter;
 
 import java.lang.reflect.Field;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * TODO

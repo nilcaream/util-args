@@ -20,7 +20,7 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * TODO
@@ -61,7 +61,8 @@ public abstract class AbstractFunctionalTest {
             modifiedFields.add(fieldName);
         }
         for (Field field : wrapper.getClass().getDeclaredFields()) {
-            if (!modifiedFields.contains(field.getName())) {
+            // synthetic check for JaCoCo - https://groups.google.com/d/msg/jacoco/H0gDwxNuhK4/-OV545nxAQAJ
+            if (!modifiedFields.contains(field.getName()) && !field.isSynthetic()) {
                 assertThat(field.get(wrapper)).isNull();
             }
         }

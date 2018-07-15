@@ -36,6 +36,11 @@ public class UtilArgs {
     private Object wrapper;
     private ArgumentProcessor processor = new ArgumentProcessor();
 
+    public static <T> T bind(String[] arguments, T wrapper) {
+        new UtilArgs(arguments, wrapper);
+        return wrapper;
+    }
+
     /**
      * Resolves given arguments and updates user-provided object fields. The object fields should be
      * annotated with {@link com.nilcaream.utilargs.model.Option} annotation. They don't have to be public.

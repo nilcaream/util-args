@@ -185,14 +185,17 @@ public class ArgumentProcessor {
     }
 
     private void bindValue(Parameter parameter) {
+        boolean success = false;
         for (ArgumentBinder binder : binders) {
             try {
                 binder.bind(parameter, wrapper);
+                success = true;
                 break;
             } catch (Exception e) {
                 // ignore and keep looking
             }
         }
+        // TODO check success flag and throw exception if exception handling is enabled
     }
 
     public String getOperands() {
