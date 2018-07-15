@@ -16,7 +16,6 @@
 
 package com.nilcaream.utilargs;
 
-import com.nilcaream.utilargs.core.ArgumentBinder;
 import com.nilcaream.utilargs.model.Option;
 import com.nilcaream.utilargs.model.Parameter;
 import org.junit.Before;
@@ -39,11 +38,11 @@ public class ArgumentProcessorTest {
     @Before
     public void setUp() {
         argumentProcessor = new ArgumentProcessor(false);
-        argumentProcessor.setBinders(new ArrayList<ArgumentBinder>());
+        argumentProcessor.setBinders(new ArrayList<>());
     }
 
     @Test
-    public void inputHolders() throws Exception {
+    public void inputHolders() {
         // given
         TestObject testObject = new TestObject();
         String[] args = new String[]{"test"};
@@ -59,7 +58,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void verifyAllDeclaredParameters() throws Exception {
+    public void verifyAllDeclaredParameters() {
         // given
         TestObject testObject = new TestObject();
         String[] args = new String[0];
@@ -81,7 +80,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void verifySomeMatchingParameters() throws Exception {
+    public void verifySomeMatchingParameters() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-c 1 -o -z 4 -q 2".split(" ");
@@ -98,7 +97,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void verifyNoParameters() throws Exception {
+    public void verifyNoParameters() {
         // given
         TestObject testObject = new TestObject();
         String[] args = new String[0];
@@ -115,7 +114,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void negativeNumbers() throws Exception {
+    public void negativeNumbers() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-c -1 -o -2b -z -0.04 -q 2".split(" ");
@@ -132,7 +131,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void singleString() throws Exception {
+    public void singleString() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-n name".split(" ");
@@ -147,7 +146,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void twoArguments() throws Exception {
+    public void twoArguments() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-o 123 -n test".split(" ");
@@ -163,7 +162,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void verifySimpleOperands() throws Exception {
+    public void verifySimpleOperands() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-o 123 -n test my operands".split(" ");
@@ -182,7 +181,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void verifyOperandsWithDelimiter() throws Exception {
+    public void verifyOperandsWithDelimiter() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-n test -v -- my operands -x test".split(" ");
@@ -201,7 +200,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void verifyOperandsWithBooleanFlag() throws Exception {
+    public void verifyOperandsWithBooleanFlag() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-n test -v test operands -x test".split(" ");
@@ -220,7 +219,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void verifyOperandsWithBooleanTrueFlag() throws Exception {
+    public void verifyOperandsWithBooleanTrueFlag() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-n test -v true operands -x test".split(" ");
@@ -239,7 +238,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void verifyOperandsWithTwoDelimiters() throws Exception {
+    public void verifyOperandsWithTwoDelimiters() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-n test -v -- my -- operands -x test".split(" ");
@@ -258,7 +257,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void lastValueNotSet() throws Exception {
+    public void lastValueNotSet() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-o 123 -n".split(" ");
@@ -274,7 +273,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void firstValueNotSet() throws Exception {
+    public void firstValueNotSet() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-o -n name".split(" ");
@@ -290,7 +289,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void middleValueNotSet() throws Exception {
+    public void middleValueNotSet() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-c city -o -n name".split(" ");
@@ -307,7 +306,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void allValuesNotSet() throws Exception {
+    public void allValuesNotSet() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-c -o -n".split(" ");
@@ -324,7 +323,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void simpleBooleanGroup() throws Exception {
+    public void simpleBooleanGroup() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-vy".split(" ");
@@ -340,7 +339,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void complexBooleanGroup() throws Exception {
+    public void complexBooleanGroup() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-c city -vy -n name".split(" ");
@@ -358,7 +357,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void booleanGroupWithOperands() throws Exception {
+    public void booleanGroupWithOperands() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-vy -true true".split(" ");
@@ -376,7 +375,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void invalidTypesBooleanGroupWithOperands() throws Exception {
+    public void invalidTypesBooleanGroupWithOperands() {
         // given
         TestObject testObject = new TestObject();
         String operands = "-vyo true";
@@ -393,7 +392,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void stringPlusInvalidTypesBooleanGroupWithOperands() throws Exception {
+    public void stringPlusInvalidTypesBooleanGroupWithOperands() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-c -vy -vyo true".split(" ");
@@ -410,7 +409,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void booleanGroupWithOperandsDelimiter() throws Exception {
+    public void booleanGroupWithOperandsDelimiter() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "-vy -- -a".split(" ");
@@ -428,7 +427,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void operandCharactersOnly() throws Exception {
+    public void operandCharactersOnly() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "a b c".split(" ");
@@ -444,7 +443,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void operandsWithMinusSign() throws Exception {
+    public void operandsWithMinusSign() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "- a b c".split(" ");
@@ -460,7 +459,7 @@ public class ArgumentProcessorTest {
     }
 
     @Test
-    public void operandAsString() throws Exception {
+    public void operandAsString() {
         // given
         TestObject testObject = new TestObject();
         String[] args = "test".split(" ");

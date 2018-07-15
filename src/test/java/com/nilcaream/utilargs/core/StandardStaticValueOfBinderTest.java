@@ -48,7 +48,7 @@ public class StandardStaticValueOfBinderTest extends AbstractBinderTest {
     }
 
     private static class ValidObject {
-        static ValidObject instance = new ValidObject();
+        static final ValidObject instance = new ValidObject();
 
         @Option(name = 'f')
         ValidObject field;
@@ -59,7 +59,7 @@ public class StandardStaticValueOfBinderTest extends AbstractBinderTest {
     }
 
     private static class NonStaticValueOf {
-        static NonStaticValueOf instance = new NonStaticValueOf();
+        static final NonStaticValueOf instance = new NonStaticValueOf();
 
         @Option(name = 'f')
         NonStaticValueOf field;
@@ -70,7 +70,7 @@ public class StandardStaticValueOfBinderTest extends AbstractBinderTest {
     }
 
     private static class NonPublicValueOf {
-        static NonPublicValueOf instance = new NonPublicValueOf();
+        static final NonPublicValueOf instance = new NonPublicValueOf();
 
         @Option(name = 'f')
         NonPublicValueOf field;

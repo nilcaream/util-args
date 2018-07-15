@@ -27,11 +27,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * <p>
  * Krzysztof Smigielski 2/1/13 8:50 PM
  */
-public abstract class AbstractFunctionalTest {
+abstract class AbstractFunctionalTest {
 
     protected abstract Object createTestObject();
 
-    protected void verify(String commandLineArguments, String expected) throws Exception {
+    void verify(String commandLineArguments, String expected) throws Exception {
         // given
         Object wrapper = createTestObject();
         String[] expectedEntry = expected.split("\\|");
@@ -40,7 +40,7 @@ public abstract class AbstractFunctionalTest {
         if (expectedEntry.length > 1) {
             expectedOperands = expectedEntry[1];
         }
-        Set<String> modifiedFields = new HashSet<String>();
+        Set<String> modifiedFields = new HashSet<>();
 
         // when
         UtilArgs ua = new UtilArgs(commandLineArguments.split(" "), wrapper);

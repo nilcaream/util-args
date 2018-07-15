@@ -55,12 +55,16 @@ public class StaticValueOfBinder implements ArgumentBinder {
 
     private String getWrappingClassName(String primitiveClassName) {
         String result;
-        if (primitiveClassName.equals("int")) {
-            result = "Integer";
-        } else if (primitiveClassName.equals("char")) {
-            result = "Character";
-        } else {
-            result = toCamelCase(primitiveClassName);
+        switch (primitiveClassName) {
+            case "int":
+                result = "Integer";
+                break;
+            case "char":
+                result = "Character";
+                break;
+            default:
+                result = toCamelCase(primitiveClassName);
+                break;
         }
         return result;
     }

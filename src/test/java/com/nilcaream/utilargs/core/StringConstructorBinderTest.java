@@ -57,7 +57,7 @@ public class StringConstructorBinderTest extends AbstractBinderTest {
         doAssert(new TestObject(), "bigInteger", "123456789012345", new BigInteger("123456789012345"));
     }
 
-    protected void doAssertAsString(Object wrapper, String fieldName, String actual, Object expected) throws Exception {
+    private void doAssertAsString(Object wrapper, String fieldName, String actual, Object expected) throws Exception {
         // given
         Parameter parameter = createFrom(wrapper, fieldName, actual);
 

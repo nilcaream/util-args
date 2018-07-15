@@ -237,7 +237,7 @@ public class ArgumentProcessor {
      * @return not-null list sorted by an option name.
      */
     public final List<Parameter> getParameters() {
-        List<Parameter> parameters = new ArrayList<Parameter>();
+        List<Parameter> parameters = new ArrayList<>();
         for (Parameter parameter : optionNameToParameter.values()) {
             if (parameter.getArgument() != null) {
                 parameters.add(parameter);

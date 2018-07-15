@@ -226,9 +226,7 @@ public class UtilArgsTest {
             if (more != that.more) return false;
             if (Float.compare(that.value, value) != 0) return false;
             if (amount != null ? !amount.equals(that.amount) : that.amount != null) return false;
-            if (name != null ? !name.equals(that.name) : that.name != null) return false;
-
-            return true;
+            return name != null ? name.equals(that.name) : that.name == null;
         }
 
         @Override

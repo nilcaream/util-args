@@ -27,11 +27,11 @@ import static org.assertj.core.api.Assertions.assertThat;
  * <p>
  * Krzysztof Smigielski 1/27/13 1:44 PM
  */
-public abstract class AbstractBinderTest {
+abstract class AbstractBinderTest {
 
-    protected ArgumentBinder binder;
+    ArgumentBinder binder;
 
-    protected void doAssert(Object wrapper, String fieldName, String actual, Object expected) throws Exception {
+    void doAssert(Object wrapper, String fieldName, String actual, Object expected) throws Exception {
         // given
         Parameter parameter = createFrom(wrapper, fieldName, actual);
 
@@ -42,7 +42,7 @@ public abstract class AbstractBinderTest {
         assertThat(wrapper.getClass().getDeclaredField(fieldName).get(wrapper)).isEqualTo(expected);
     }
 
-    protected Parameter createFrom(Object wrapper, String fieldName, String argument) throws NoSuchFieldException {
+    Parameter createFrom(Object wrapper, String fieldName, String argument) throws NoSuchFieldException {
         Parameter parameter = new Parameter();
         Field field = wrapper.getClass().getDeclaredField(fieldName);
         parameter.setField(field);
