@@ -38,7 +38,7 @@ public class ArgumentProcessorTest {
 
     @Before
     public void setUp() {
-        argumentProcessor = new ArgumentProcessor();
+        argumentProcessor = new ArgumentProcessor(false);
         argumentProcessor.setBinders(new ArrayList<ArgumentBinder>());
     }
 

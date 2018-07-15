@@ -60,4 +60,14 @@ public class Parameter implements Comparable<Parameter> {
         }
         return option.name() - o.option.name();
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Parameter{");
+        sb.append("option=").append(option);
+        sb.append(", argument='").append(argument).append('\'');
+        sb.append(", field=").append(field);
+        sb.append('}');
+        return sb.toString();
+    }
 }

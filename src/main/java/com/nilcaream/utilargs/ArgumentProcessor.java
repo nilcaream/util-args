@@ -21,7 +21,11 @@ import com.nilcaream.utilargs.model.Option;
 import com.nilcaream.utilargs.model.Parameter;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * POSIX-style argument parser. Contains minimal subset of POSIX-1.2008 standard.
@@ -35,11 +39,14 @@ public class ArgumentProcessor {
     private String[] arguments;
     private Object wrapper;
 
-    private Map<Character, Parameter> optionNameToParameter = new HashMap<Character, Parameter>();
-    private List<ArgumentBinder> binders = new ArrayList<ArgumentBinder>();
+    private boolean failOnError;
+
+    private Map<Character, Parameter> optionNameToParameter = new HashMap<>();
+    private List<ArgumentBinder> binders = new ArrayList<>();
     private int operandsIndex;
 
-    public ArgumentProcessor() {
+    public ArgumentProcessor(boolean failOnError) {
+        this.failOnError = failOnError;
     }
 
     /**
@@ -117,6 +124,9 @@ public class ArgumentProcessor {
                     } else {
                         operandsIndex = index;
                     }
+                } else if (failOnError) {
+                    // TODO filter our false negatives e.g. operands
+                    throw new IllegalStateException(key + "=" + value);
                 }
             }
         }
@@ -195,7 +205,9 @@ public class ArgumentProcessor {
                 // ignore and keep looking
             }
         }
-        // TODO check success flag and throw exception if exception handling is enabled
+        if (failOnError && !success) {
+            throw new IllegalStateException("Binding failed for " + parameter.toString());
+        }
     }
 
     public String getOperands() {
@@ -214,8 +226,7 @@ public class ArgumentProcessor {
      * @return not-null list sorted by an option name.
      */
     public List<Parameter> getDeclaredParameters() {
-        List<Parameter> parameters = new ArrayList<Parameter>();
-        parameters.addAll(optionNameToParameter.values());
+        List<Parameter> parameters = new ArrayList<>(optionNameToParameter.values());
         Collections.sort(parameters);
         return parameters;
     }

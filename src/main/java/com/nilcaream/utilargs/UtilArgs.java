@@ -16,8 +16,11 @@
 
 package com.nilcaream.utilargs;
 
+import com.nilcaream.utilargs.core.ArgumentBinder;
 import com.nilcaream.utilargs.core.StaticValueOfBinder;
 import com.nilcaream.utilargs.core.StringConstructorBinder;
+
+import java.util.List;
 
 /**
  * Main, single-use, stateful class for processing command line arguments and automatic binding
@@ -34,7 +37,29 @@ public class UtilArgs {
 
     private String[] arguments;
     private Object wrapper;
-    private ArgumentProcessor processor = new ArgumentProcessor();
+    private ArgumentProcessor processor;
+
+    @lombok.Builder(builderClassName = "Binder", buildMethodName = "bind")
+    private UtilArgs(boolean failOnError, List<ArgumentBinder> additionalBinders, boolean disableDefaultBinders, String[] arguments, Object wrapper) {
+        if (arguments == null || wrapper == null) {
+            throw new IllegalArgumentException("Binder requires providing arguments and wrapper object");
+        }
+
+        processor = new ArgumentProcessor(failOnError);
+
+        if (!disableDefaultBinders) {
+            processor.getBinders().add(new StaticValueOfBinder());
+            processor.getBinders().add(new StringConstructorBinder());
+        }
+        if (additionalBinders != null && !additionalBinders.isEmpty()) {
+            for (ArgumentBinder binder : additionalBinders) {
+                processor.getBinders().add(binder);
+            }
+        }
+        this.arguments = arguments;
+        this.wrapper = wrapper;
+        processor.initialize(arguments, wrapper);
+    }
 
     public static <T> T bind(String[] arguments, T wrapper) {
         new UtilArgs(arguments, wrapper);
@@ -53,6 +78,7 @@ public class UtilArgs {
     public UtilArgs(String[] arguments, Object wrapper) {
         this.arguments = arguments;
         this.wrapper = wrapper;
+        processor = new ArgumentProcessor(false);
         processor.getBinders().add(new StaticValueOfBinder());
         processor.getBinders().add(new StringConstructorBinder());
         processor.initialize(arguments, wrapper);
