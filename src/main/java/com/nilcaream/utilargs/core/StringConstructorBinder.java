@@ -29,11 +29,16 @@ import java.lang.reflect.Field;
 public class StringConstructorBinder implements ArgumentBinder {
 
     @Override
-    public void bind(Parameter parameter, Object wrapper) throws Exception {
+    public boolean bind(Parameter parameter, Object wrapper) throws Exception {
         Field field = parameter.getField();
         Constructor constructor = field.getType().getConstructor(String.class);
-        Object value = constructor.newInstance(parameter.getArgument());
-        field.setAccessible(true);
-        field.set(wrapper, value);
+        if (constructor == null) {
+            return false;
+        } else {
+            Object value = constructor.newInstance(parameter.getArgument());
+            field.setAccessible(true);
+            field.set(wrapper, value);
+            return true;
+        }
     }
 }

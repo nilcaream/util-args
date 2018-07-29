@@ -30,16 +30,19 @@ import java.lang.reflect.Modifier;
 public class StaticValueOfBinder implements ArgumentBinder {
 
     @Override
-    public void bind(Parameter parameter, Object wrapper) throws Exception {
+    public boolean bind(Parameter parameter, Object wrapper) throws Exception {
         Field field = parameter.getField();
         Class<?> fieldType = getType(field);
         Class<?> parameterType = getParameterType(field);
         Method valueOf = fieldType.getMethod("valueOf", parameterType);
-        if (Modifier.isStatic(valueOf.getModifiers())) {
+        if (valueOf == null) {
+            return false;
+        } else if (Modifier.isStatic(valueOf.getModifiers())) {
             Object argument = getArgument(parameter);
             Object value = valueOf.invoke(null, argument);
             field.setAccessible(true);
             field.set(wrapper, value);
+            return true;
         } else {
             throw new NoSuchMethodException("Method valueOf(String) is not static");
         }

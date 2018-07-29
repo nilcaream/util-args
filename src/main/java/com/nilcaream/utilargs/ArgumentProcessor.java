@@ -17,8 +17,10 @@
 package com.nilcaream.utilargs;
 
 import com.nilcaream.utilargs.core.ArgumentBinder;
+import com.nilcaream.utilargs.model.BindingException;
 import com.nilcaream.utilargs.model.Option;
 import com.nilcaream.utilargs.model.Parameter;
+import com.nilcaream.utilargs.model.ProcessingException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -39,14 +41,16 @@ public class ArgumentProcessor {
     private String[] arguments;
     private Object wrapper;
 
-    private boolean failOnError;
+    private boolean failOnBindingError;
+    private boolean failOnProcessingError;
 
     private Map<Character, Parameter> optionNameToParameter = new HashMap<>();
     private List<ArgumentBinder> binders = new ArrayList<>();
     private int operandsIndex;
 
-    public ArgumentProcessor(boolean failOnError) {
-        this.failOnError = failOnError;
+    public ArgumentProcessor(boolean failOnBindingError, boolean failOnProcessingError) {
+        this.failOnBindingError = failOnBindingError;
+        this.failOnProcessingError = failOnProcessingError;
     }
 
     /**
@@ -89,8 +93,10 @@ public class ArgumentProcessor {
     }
 
     private void processArguments() {
+        boolean operandsStarted = false;
         if (areArgumentsAvailable()) {
             for (int index = 0; index < arguments.length; ) {
+                boolean operandsFound = false;
                 Parameter parameter = getParameterByKey(arguments[index]);
                 String key = arguments[index];
                 String value = getNextArgument(index);
@@ -124,9 +130,12 @@ public class ArgumentProcessor {
                     } else {
                         operandsIndex = index;
                     }
-                } else if (failOnError) {
-                    // TODO filter our false negatives e.g. operands
-                    throw new IllegalStateException(key + "=" + value);
+                } else {
+                    operandsFound = true;
+                    operandsStarted = true;
+                }
+                if (operandsStarted && !operandsFound && failOnProcessingError) {
+                    throw new ProcessingException("Valid parameter found within operands " + key);
                 }
             }
         }
@@ -196,17 +205,16 @@ public class ArgumentProcessor {
 
     private void bindValue(Parameter parameter) {
         boolean success = false;
-        for (ArgumentBinder binder : binders) {
+        for (int i = 0, size = binders.size(); i < size && !success; i++) {
+            ArgumentBinder binder = binders.get(i);
             try {
-                binder.bind(parameter, wrapper);
-                success = true;
-                break;
+                success = binder.bind(parameter, wrapper);
             } catch (Exception e) {
                 // ignore and keep looking
             }
         }
-        if (failOnError && !success) {
-            throw new IllegalStateException("Binding failed for " + parameter.toString());
+        if (failOnBindingError && !success) {
+            throw new BindingException("Binding failed for " + parameter.toString());
         }
     }
 
@@ -265,5 +273,21 @@ public class ArgumentProcessor {
 
     public void setBinders(List<ArgumentBinder> binders) {
         this.binders = binders;
+    }
+
+    public boolean isFailOnBindingError() {
+        return failOnBindingError;
+    }
+
+    public void setFailOnBindingError(boolean failOnBindingError) {
+        this.failOnBindingError = failOnBindingError;
+    }
+
+    public boolean isFailOnProcessingError() {
+        return failOnProcessingError;
+    }
+
+    public void setFailOnProcessingError(boolean failOnProcessingError) {
+        this.failOnProcessingError = failOnProcessingError;
     }
 }

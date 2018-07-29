@@ -18,6 +18,7 @@ package com.nilcaream.utilargs;
 
 import com.nilcaream.utilargs.model.Option;
 import com.nilcaream.utilargs.model.Parameter;
+import com.nilcaream.utilargs.model.ProcessingException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -37,7 +38,7 @@ public class ArgumentProcessorTest {
 
     @Before
     public void setUp() {
-        argumentProcessor = new ArgumentProcessor(false);
+        argumentProcessor = new ArgumentProcessor(false, true);
         argumentProcessor.setBinders(new ArrayList<>());
     }
 
@@ -94,6 +95,7 @@ public class ArgumentProcessorTest {
         assertParameterState(parameters.get(0), 'c', "1");
         assertParameterState(parameters.get(1), 'o', "");
         assertParameterState(parameters.get(2), 'z', "4");
+        assertThat(argumentProcessor.getOperands()).isEqualTo("-q 2");
     }
 
     @Test
@@ -235,6 +237,16 @@ public class ArgumentProcessorTest {
 
         assertThat(argumentProcessor.getOperandsIndex()).isEqualTo(3);
         assertThat(argumentProcessor.getOperands()).isEqualTo("true operands -x test");
+    }
+
+    @Test(expected = ProcessingException.class)
+    public void shouldFailProcessingByMatchingValidArgumentWithinOperands() {
+        // given
+        TestObject testObject = new TestObject();
+        String[] args = "-n test -v true operands -z 1".split(" ");
+
+        // when
+        argumentProcessor.initialize(args, testObject);
     }
 
     @Test

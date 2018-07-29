@@ -40,12 +40,12 @@ public class UtilArgs {
     private ArgumentProcessor processor;
 
     @lombok.Builder(builderClassName = "Binder", buildMethodName = "bind")
-    private UtilArgs(boolean failOnError, List<ArgumentBinder> additionalBinders, boolean disableDefaultBinders, String[] arguments, Object wrapper) {
+    private UtilArgs(boolean failOnBindingError, boolean failOnParsingError, List<ArgumentBinder> additionalBinders, boolean disableDefaultBinders, String[] arguments, Object wrapper) {
         if (arguments == null || wrapper == null) {
             throw new IllegalArgumentException("Binder requires providing arguments and wrapper object");
         }
 
-        processor = new ArgumentProcessor(failOnError);
+        processor = new ArgumentProcessor(failOnBindingError, failOnParsingError);
 
         if (!disableDefaultBinders) {
             processor.getBinders().add(new StaticValueOfBinder());
@@ -61,6 +61,14 @@ public class UtilArgs {
         processor.initialize(arguments, wrapper);
     }
 
+    /**
+     * Shortcut to UtilArgs constructor. See {@link com.nilcaream.utilargs.UtilArgs#UtilArgs(String[], Object)}.
+     *
+     * @param arguments command line arguments
+     * @param wrapper   user-provided arguments wrapper
+     * @param <T>       type of wrapper object
+     * @return wrapper object
+     */
     public static <T> T bind(String[] arguments, T wrapper) {
         new UtilArgs(arguments, wrapper);
         return wrapper;
@@ -78,7 +86,7 @@ public class UtilArgs {
     public UtilArgs(String[] arguments, Object wrapper) {
         this.arguments = arguments;
         this.wrapper = wrapper;
-        processor = new ArgumentProcessor(false);
+        processor = new ArgumentProcessor(false, false);
         processor.getBinders().add(new StaticValueOfBinder());
         processor.getBinders().add(new StringConstructorBinder());
         processor.initialize(arguments, wrapper);

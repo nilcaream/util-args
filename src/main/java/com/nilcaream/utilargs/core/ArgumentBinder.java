@@ -25,6 +25,6 @@ import com.nilcaream.utilargs.model.Parameter;
  */
 public interface ArgumentBinder {
 
-    void bind(Parameter parameter, Object wrapper) throws Exception;
+    boolean bind(Parameter parameter, Object wrapper) throws Exception;
 
 }
