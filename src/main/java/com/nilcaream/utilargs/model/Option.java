@@ -31,6 +31,11 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Option {
 
-    char name();
+    @Deprecated
+    char name() default '?';
+
+    String value() default "";
+
+    String alternative() default "";
 
 }
