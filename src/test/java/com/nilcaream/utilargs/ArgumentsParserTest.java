@@ -8,9 +8,9 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ArgumentProcessor2Test {
+class ArgumentsParserTest {
 
-    private final ArgumentProcessor2 underTest = new ArgumentProcessor2();
+    private final ArgumentsParser underTest = new ArgumentsParser();
 
     @Test
     @DisplayName("Should parse simple single-value short options")
@@ -87,5 +87,51 @@ class ArgumentProcessor2Test {
         // TODO consider filtering -- value
         assertThat(actual.get("b")).containsExactly("--");
         assertThat(actual.get("--")).containsExactly("operand 1 text -x not an option");
+    }
+
+    @Test
+    @DisplayName("Should ignore empty operands")
+    void ignoreEmptyOperands() {
+        // given
+        String[] args = new String[]{"--a", "test a", "-b", "--"};
+
+        // when
+        Map<String, List<String>> actual = underTest.process(args);
+
+        // then
+        assertThat(actual).hasSize(2);
+        assertThat(actual.get("a")).containsExactly("test a");
+        // TODO consider filtering -- value
+        assertThat(actual.get("b")).containsExactly("--");
+    }
+
+    @Test
+    @DisplayName("Should not add duplicated values")
+    void simpleIgnoreDuplicates() {
+        // given
+        String[] args = new String[]{"--a", "test a", "-b", "b value", "-a", "test a"};
+
+        // when
+        Map<String, List<String>> actual = underTest.process(args);
+
+        // then
+        assertThat(actual).hasSize(2);
+        assertThat(actual.get("a")).containsExactly("test a");
+        assertThat(actual.get("b")).containsExactly("b value");
+    }
+
+    @Test
+    @DisplayName("Should set value even if it can be interpreted as an option")
+    void simpleAlwaysSetValue() {
+        // given
+        String[] args = new String[]{"--a", "test a", "-b", "-a"};
+
+        // when
+        Map<String, List<String>> actual = underTest.process(args);
+
+        // then
+        assertThat(actual).hasSize(2);
+        assertThat(actual.get("a")).containsExactly("test a", "");
+        assertThat(actual.get("b")).containsExactly("-a");
     }
 }
