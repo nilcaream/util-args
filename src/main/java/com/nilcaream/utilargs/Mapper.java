@@ -7,10 +7,10 @@ import java.lang.reflect.Modifier;
 
 public class Mapper {
 
-    public <T> T map(Class<T> cls, String value) {
+    @SuppressWarnings("unchecked")
+    public <T> T map(String value, Class<T> cls) {
         T result = null;
         if (cls.equals(String.class)) {
-            //noinspection unchecked
             result = (T) value;
         }
         if (result == null) {
@@ -22,6 +22,7 @@ public class Mapper {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     private <T> T tryStaticValueOf(Class<T> cls, String value) {
         try {
             Class<?> fieldType = getType(cls);
@@ -29,7 +30,6 @@ public class Mapper {
             Method valueOf = fieldType.getMethod("valueOf", parameterType);
             Object argument = getArgument(cls, value);
             if (Modifier.isStatic(valueOf.getModifiers()) && argument != null) {
-                //noinspection unchecked
                 return (T) valueOf.invoke(null, argument);
             }
         } catch (InvocationTargetException | ClassNotFoundException | IllegalAccessException | NoSuchMethodException ignore) {

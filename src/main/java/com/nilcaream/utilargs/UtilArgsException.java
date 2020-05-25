@@ -1,6 +1,6 @@
-package com.nilcaream.utilargs.model;
+package com.nilcaream.utilargs;
 
-public abstract class UtilArgsException extends RuntimeException {
+public class UtilArgsException extends RuntimeException {
 
     public UtilArgsException(String message) {
         super(message);

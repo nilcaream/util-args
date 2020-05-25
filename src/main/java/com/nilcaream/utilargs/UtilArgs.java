@@ -1,124 +1,80 @@
-/*
- * Copyright 2018 Krzysztof Smigielski
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.nilcaream.utilargs;
 
-import com.nilcaream.utilargs.core.ArgumentBinder;
-import com.nilcaream.utilargs.core.StaticValueOfBinder;
-import com.nilcaream.utilargs.core.StringConstructorBinder;
-
+import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-/**
- * Main, single-use, stateful class for processing command line arguments and automatic binding
- * to user-provided object. Uses predefined set of {@link com.nilcaream.utilargs.core.ArgumentBinder}
- * instances.
- * <p>
- * For more control over the binding process consider using {@link ArgumentProcessor}.
- * <p>
- * Krzysztof Smigielski 10/28/12 7:29 PM
- *
- * @see <a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html">http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html</a>
- */
+import static java.util.Optional.ofNullable;
+
 public class UtilArgs {
 
-    private String[] arguments;
-    private Object wrapper;
-    private ArgumentProcessor processor;
+    private final ArgumentsParser parser = new ArgumentsParser();
+    private final ValuesSelector selector = new ValuesSelector();
+    private final Binder binder = new Binder();
+    private boolean failFast = true;
 
-    @lombok.Builder(builderClassName = "Binder", buildMethodName = "bind")
-    private UtilArgs(boolean failOnBindingError, boolean failOnParsingError, List<ArgumentBinder> additionalBinders, boolean disableDefaultBinders, String[] arguments, Object wrapper) {
-        if (arguments == null || wrapper == null) {
-            throw new IllegalArgumentException("Binder requires providing arguments and wrapper object");
-        }
+    private String[] args;
+    private Object target;
+    private String operands;
 
-        processor = new ArgumentProcessor(failOnBindingError, failOnParsingError);
+    public static UtilArgs bind(String[] args, Object target) {
+        return create(args, target).bind();
+    }
 
-        if (!disableDefaultBinders) {
-            processor.getBinders().add(new StaticValueOfBinder());
-            processor.getBinders().add(new StringConstructorBinder());
-        }
-        if (additionalBinders != null && !additionalBinders.isEmpty()) {
-            for (ArgumentBinder binder : additionalBinders) {
-                processor.getBinders().add(binder);
+    public static UtilArgs create(String[] args, Object target) {
+        return new UtilArgs().initialize(args, target);
+    }
+
+    private UtilArgs initialize(String[] args, Object target) {
+        this.args = ofNullable(args).orElse(new String[]{});
+        this.target = ofNullable(target).orElseThrow(() -> new IllegalArgumentException("Target cannot be null"));
+        return this;
+    }
+
+    public UtilArgs bind() {
+        Map<String, List<String>> arguments = parser.process(args);
+        for (Field field : target.getClass().getDeclaredFields()) {
+            Option option = field.getAnnotation(Option.class);
+            if (option != null) {
+                try {
+                    binder.bind(target, field, selector.select(arguments, option));
+                } catch (IllegalAccessException e) {
+                    if (failFast) {
+                        throw new UtilArgsException("Binding failed for " + field.getName(), e);
+                    }
+                } catch (UtilArgsException e) {
+                    if (failFast) {
+                        throw e;
+                    }
+                }
             }
         }
-        this.arguments = arguments;
-        this.wrapper = wrapper;
-        processor.initialize(arguments, wrapper);
+        operands = arguments.getOrDefault("--", Collections.singletonList("")).get(0);
+        return this;
     }
 
-    /**
-     * Shortcut to UtilArgs constructor. See {@link com.nilcaream.utilargs.UtilArgs#UtilArgs(String[], Object)}.
-     *
-     * @param arguments command line arguments
-     * @param wrapper   user-provided arguments wrapper
-     * @param <T>       type of wrapper object
-     * @return wrapper object
-     */
-    public static <T> T bind(String[] arguments, T wrapper) {
-        new UtilArgs(arguments, wrapper);
-        return wrapper;
-    }
-
-    /**
-     * Resolves given arguments and updates user-provided object fields. The object fields should be
-     * annotated with {@link com.nilcaream.utilargs.model.Option} annotation. They don't have to be public.
-     * <p>
-     * This constructor will never throw an exception when field binding process fails.
-     *
-     * @param arguments command line arguments
-     * @param wrapper   user-provided arguments wrapper
-     */
-    public UtilArgs(String[] arguments, Object wrapper) {
-        this.arguments = arguments;
-        this.wrapper = wrapper;
-        processor = new ArgumentProcessor(false, false);
-        processor.getBinders().add(new StaticValueOfBinder());
-        processor.getBinders().add(new StringConstructorBinder());
-        processor.initialize(arguments, wrapper);
-    }
-
-    /**
-     * Gets user-provided (command line) arguments.
-     *
-     * @return arguments array
-     */
-    public String[] getArguments() {
-        return arguments;
-    }
-
-    /**
-     * Gets user-provided wrapper object with {@link com.nilcaream.utilargs.model.Option} annotated fields
-     * bound with provided arguments array.
-     *
-     * @return updated instance of provided wrapper object
-     */
-    public Object getWrapper() {
-        return wrapper;
-    }
-
-    /**
-     * Gets operands - String with arguments that were unable to be bound to provided wrapper object. For more details
-     * refer to the POSIX documentation.
-     *
-     * @return not-null String
-     * @see <a href="http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html">http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html</a>
-     */
     public String getOperands() {
-        return processor.getOperands();
+        return operands;
+    }
+
+    public UtilArgs disableFailFast() {
+        failFast = false;
+        return this;
+    }
+
+    public UtilArgs disableUseFirst() {
+        binder.withUseFirst(false);
+        return this;
+    }
+
+    public UtilArgs disableUseLast() {
+        binder.withUseLast(false);
+        return this;
+    }
+
+    public UtilArgs withMapper(Mapper mapper) {
+        binder.withMapper(mapper);
+        return this;
     }
 }

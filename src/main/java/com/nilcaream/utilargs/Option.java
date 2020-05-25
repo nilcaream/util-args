@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-package com.nilcaream.utilargs.core;
+package com.nilcaream.utilargs;
 
-import com.nilcaream.utilargs.model.Parameter;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Wrapper object fields binder.
+ * Field annotation used to indicate that this field should be used for automatic
+ * argument binding. Name value should be unique within annotated object.
  * <p>
- * Krzysztof Smigielski 10/30/12 7:45 PM
+ * Krzysztof Smigielski 10/28/12 7:32 PM
  */
-public interface ArgumentBinder {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface Option {
 
-    boolean bind(Parameter parameter, Object wrapper) throws Exception;
+    String value() default "";
+
+    String alternative() default "";
 
 }

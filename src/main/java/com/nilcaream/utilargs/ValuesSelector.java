@@ -1,7 +1,5 @@
 package com.nilcaream.utilargs;
 
-import com.nilcaream.utilargs.model.Option;
-
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;

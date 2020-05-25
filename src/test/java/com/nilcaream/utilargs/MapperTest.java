@@ -11,14 +11,14 @@ class MapperTest {
     @Test
     void shouldMapPrimitiveTypes() {
         //when
-        int actualInt = underTest.map(int.class, "10");
-        short actualShort = underTest.map(short.class, "-20");
-        long actualLong = underTest.map(long.class, "999");
-        float actualFloat = underTest.map(float.class, "128");
-        double actualDouble = underTest.map(double.class, "32");
-        char actualChar = underTest.map(char.class, "X");
-        byte actualByte = underTest.map(byte.class, "-71");
-        boolean actualBoolean = underTest.map(boolean.class, "true");
+        int actualInt = underTest.map("10", int.class);
+        short actualShort = underTest.map("-20", short.class);
+        long actualLong = underTest.map("999", long.class);
+        float actualFloat = underTest.map("128", float.class);
+        double actualDouble = underTest.map("32", double.class);
+        char actualChar = underTest.map("X", char.class);
+        byte actualByte = underTest.map("-71", byte.class);
+        boolean actualBoolean = underTest.map("true", boolean.class);
 
         // then
         assertThat(actualInt).isEqualTo(10);
@@ -34,14 +34,14 @@ class MapperTest {
     @Test
     void shouldMapWrapperTypes() {
         //when
-        Integer actualInt = underTest.map(Integer.class, "10");
-        Short actualShort = underTest.map(Short.class, "-20");
-        Long actualLong = underTest.map(Long.class, "999");
-        Float actualFloat = underTest.map(Float.class, "128");
-        Double actualDouble = underTest.map(Double.class, "32");
-        Character actualChar = underTest.map(Character.class, "X");
-        Byte actualByte = underTest.map(Byte.class, "-71");
-        Boolean actualBoolean = underTest.map(Boolean.class, "true");
+        Integer actualInt = underTest.map("10", Integer.class);
+        Short actualShort = underTest.map("-20", Short.class);
+        Long actualLong = underTest.map("999", Long.class);
+        Float actualFloat = underTest.map("128", Float.class);
+        Double actualDouble = underTest.map("32", Double.class);
+        Character actualChar = underTest.map("X", Character.class);
+        Byte actualByte = underTest.map("-71", Byte.class);
+        Boolean actualBoolean = underTest.map("true", Boolean.class);
 
         // then
         assertThat(actualInt).isEqualTo(10);
@@ -57,7 +57,7 @@ class MapperTest {
     @Test
     void shouldMapString() {
         //when
-        String actual = underTest.map(String.class, "this is text");
+        String actual = underTest.map("this is text", String.class);
 
         // then
         assertThat(actual).isEqualTo("this is text");
@@ -66,7 +66,7 @@ class MapperTest {
     @Test
     void shouldUseStringConstructor() {
         //when
-        StringBuilder actual = underTest.map(StringBuilder.class, "this is text");
+        StringBuilder actual = underTest.map("this is text", StringBuilder.class);
 
         // then
         assertThat(actual).isNotNull();

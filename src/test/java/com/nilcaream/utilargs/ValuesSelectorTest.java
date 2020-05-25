@@ -1,6 +1,5 @@
 package com.nilcaream.utilargs;
 
-import com.nilcaream.utilargs.model.Option;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
