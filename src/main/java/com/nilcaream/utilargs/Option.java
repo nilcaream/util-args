@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Krzysztof Smigielski
+ * Copyright 2020 Krzysztof Smigielski
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ import java.lang.annotation.Target;
 
 /**
  * Field annotation used to indicate that this field should be used for automatic
- * argument binding. Name value should be unique within annotated object.
- * <p>
- * Krzysztof Smigielski 10/28/12 7:32 PM
+ * argument binding. Value and alternative should be unique within annotated object.
+ * Usually value is a single-character. Alternative should be used for long options
+ * format.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

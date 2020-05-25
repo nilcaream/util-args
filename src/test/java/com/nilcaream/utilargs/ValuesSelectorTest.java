@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Krzysztof Smigielski
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.nilcaream.utilargs;
 
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +32,8 @@ class ValuesSelectorTest {
     private final ValuesSelector underTest = new ValuesSelector();
 
     @Test
-    @DisplayName("Should select single element by value")
-    void shouldSelectSingle() throws NoSuchFieldException {
+    @DisplayName("Select single element by option value")
+    void case01() throws NoSuchFieldException {
         // given
         Map<String, List<String>> arguments = new HashMap<>();
         arguments.put("string", of("single"));
@@ -31,8 +47,8 @@ class ValuesSelectorTest {
     }
 
     @Test
-    @DisplayName("Should select single element by alternative value")
-    void shouldSelectSingleByAlternative() throws NoSuchFieldException {
+    @DisplayName("Select single element by option alternative")
+    void case02() throws NoSuchFieldException {
         // given
         Map<String, List<String>> arguments = new HashMap<>();
         arguments.put("altString", of("single alt"));
@@ -46,8 +62,8 @@ class ValuesSelectorTest {
     }
 
     @Test
-    @DisplayName("Should select multiple elements")
-    void shouldSelectMultiple() throws NoSuchFieldException {
+    @DisplayName("Select multiple elements")
+    void case03() throws NoSuchFieldException {
         // given
         Map<String, List<String>> arguments = new HashMap<>();
         arguments.put("string", of("first", "second"));
@@ -61,8 +77,8 @@ class ValuesSelectorTest {
     }
 
     @Test
-    @DisplayName("Should not change order for value and alternative")
-    void shouldNotChangeOrder() throws NoSuchFieldException {
+    @DisplayName("Do not change order for value and alternative")
+    void case04() throws NoSuchFieldException {
         // given
         Map<String, List<String>> arguments = new HashMap<>();
         arguments.put("string", of("first", "second"));
@@ -77,8 +93,8 @@ class ValuesSelectorTest {
     }
 
     @Test
-    @DisplayName("Should not add duplicats for value and alternative")
-    void shouldNotAddDuplicates() throws NoSuchFieldException {
+    @DisplayName("Do not add duplicates for value and alternative")
+    void case05() throws NoSuchFieldException {
         // given
         Map<String, List<String>> arguments = new HashMap<>();
         arguments.put("string", of("first", "second"));

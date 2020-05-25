@@ -1,3 +1,19 @@
+/*
+ * Copyright 2020 Krzysztof Smigielski
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.nilcaream.utilargs;
 
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +32,8 @@ class BinderTest {
     private final Binder underTest = new Binder();
 
     @Test
-    @DisplayName("Should set String field with default binder settings")
-    void shouldSetStringWithDefaultSettings() throws NoSuchFieldException, IllegalAccessException {
+    @DisplayName("Set String field with default binder settings")
+    void case01() throws NoSuchFieldException, IllegalAccessException {
         // given
         TestObject target = new TestObject();
 
@@ -29,8 +45,8 @@ class BinderTest {
     }
 
     @Test
-    @DisplayName("Should set String field with default binder settings")
-    void shouldNotOverridePreviousValue() throws NoSuchFieldException, IllegalAccessException {
+    @DisplayName("Do not set value if none was provided")
+    void case02() throws NoSuchFieldException, IllegalAccessException {
         // given
         TestObject target = new TestObject();
         target.setStringField("previous");
@@ -43,8 +59,8 @@ class BinderTest {
     }
 
     @Test
-    @DisplayName("Should use first value")
-    void shouldSelectFirstValueWithDefaultSettings() throws NoSuchFieldException, IllegalAccessException {
+    @DisplayName("Use first value as default")
+    void case03() throws NoSuchFieldException, IllegalAccessException {
         // given
         TestObject target = new TestObject();
 
@@ -56,8 +72,8 @@ class BinderTest {
     }
 
     @Test
-    @DisplayName("Should use last value")
-    void shouldSelectLastValue() throws NoSuchFieldException, IllegalAccessException {
+    @DisplayName("Use last value if using first is disabled")
+    void case04() throws NoSuchFieldException, IllegalAccessException {
         // given
         underTest.withUseFirst(false);
         TestObject target = new TestObject();
@@ -70,8 +86,8 @@ class BinderTest {
     }
 
     @Test
-    @DisplayName("Should throw exception for ambiguous values")
-    void shouldFailWithForAmbiguousValues() {
+    @DisplayName("Error out for ambiguous values if using both first and last is disabled")
+    void case05() {
         // given
         underTest.withUseFirst(false).withUseLast(false);
         TestObject target = new TestObject();
@@ -83,8 +99,8 @@ class BinderTest {
     }
 
     @Test
-    @DisplayName("Should throw exception for ambiguous values")
-    void shouldFailOnArrayTypesMismatch() {
+    @DisplayName("Error out for invalid array type")
+    void case06() {
         // given
         TestObject target = new TestObject();
 
@@ -95,8 +111,8 @@ class BinderTest {
     }
 
     @Test
-    @DisplayName("Should bind list of values")
-    void shouldSetList() throws NoSuchFieldException, IllegalAccessException {
+    @DisplayName("Bind list of values")
+    void case07() throws NoSuchFieldException, IllegalAccessException {
         // given
         TestObject target = new TestObject();
 
@@ -108,8 +124,8 @@ class BinderTest {
     }
 
     @Test
-    @DisplayName("Should bind set of values")
-    void shouldBindSet() throws NoSuchFieldException, IllegalAccessException {
+    @DisplayName("Bind set of values")
+    void case08() throws NoSuchFieldException, IllegalAccessException {
         // given
         TestObject target = new TestObject();
 
@@ -121,8 +137,8 @@ class BinderTest {
     }
 
     @Test
-    @DisplayName("Should bind array of String values")
-    void shouldBindArrayOfStrings() throws NoSuchFieldException, IllegalAccessException {
+    @DisplayName("Bind array of String values")
+    void case09() throws NoSuchFieldException, IllegalAccessException {
         // given
         TestObject target = new TestObject();
 
@@ -134,8 +150,8 @@ class BinderTest {
     }
 
     @Test
-    @DisplayName("Should bind array of int values")
-    void shouldBindArrayOfInts() throws NoSuchFieldException, IllegalAccessException {
+    @DisplayName("Bind array of primitive types values")
+    void case10() throws NoSuchFieldException, IllegalAccessException {
         // given
         TestObject target = new TestObject();
 
