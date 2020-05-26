@@ -17,9 +17,11 @@
 package com.nilcaream.utilargs;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.util.Optional.ofNullable;
 
@@ -30,38 +32,46 @@ public class UtilArgs {
 
     private final ArgumentsParser parser = new ArgumentsParser();
     private final ValuesSelector selector = new ValuesSelector();
+    private final OperandsResolver operandsResolver = new OperandsResolver();
     private final Binder binder = new Binder();
     private boolean failFast = true;
 
     private String[] args;
-    private Object target;
+    private Object[] targets;
     private String operands;
+
+    private UtilArgs() {
+        // use static factory methods
+    }
 
     /**
      * Performs binding on a target object by using default binding settings.
      *
-     * @param args   arguments, usually from application main method.
-     * @param target target object; not null.
+     * @param args    arguments, usually from application main method.
+     * @param targets target objects; not null; not empty.
      * @return stateful UtilArgs instance.
      */
-    public static UtilArgs bind(String[] args, Object target) {
-        return create(args, target).bind();
+    public static UtilArgs bind(String[] args, Object... targets) {
+        return create(args, targets).bind();
     }
 
     /**
      * Initializes UtilArgs with arguments and target object. Does not perform binding.
      *
-     * @param args   arguments, usually from application main method.
-     * @param target target object; not null.
+     * @param args    arguments, usually from application main method.
+     * @param targets target objects; not null; non empty.
      * @return stateful UtilArgs instance.
      */
-    public static UtilArgs create(String[] args, Object target) {
-        return new UtilArgs().initialize(args, target);
+    public static UtilArgs create(String[] args, Object... targets) {
+        return new UtilArgs().initialize(args, targets);
     }
 
-    private UtilArgs initialize(String[] args, Object target) {
+    private UtilArgs initialize(String[] args, Object... targets) {
         this.args = ofNullable(args).orElse(new String[]{});
-        this.target = ofNullable(target).orElseThrow(() -> new IllegalArgumentException("Target cannot be null"));
+        this.targets = ofNullable(targets).orElseThrow(() -> new IllegalArgumentException("Targets cannot be null"));
+        if (targets.length == 0 || Arrays.stream(targets).anyMatch(Objects::isNull)) {
+            throw new IllegalArgumentException("None of the targets can be null");
+        }
         return this;
     }
 
@@ -73,23 +83,30 @@ public class UtilArgs {
      */
     public UtilArgs bind() {
         Map<String, List<String>> arguments = parser.parse(args);
-        for (Field field : target.getClass().getDeclaredFields()) {
-            Option option = field.getAnnotation(Option.class);
-            if (option != null) {
-                try {
-                    binder.bind(target, field, selector.select(arguments, option));
-                } catch (IllegalAccessException e) {
-                    if (failFast) {
-                        throw new UtilArgsException("Binding failed for " + field.getName(), e);
-                    }
-                } catch (UtilArgsException e) {
-                    if (failFast) {
-                        throw e;
+
+        for (Object target : targets) {
+            for (Field field : target.getClass().getDeclaredFields()) {
+                Option option = field.getAnnotation(Option.class);
+                if (option != null) {
+                    try {
+                        binder.bind(target, field, selector.select(arguments, option));
+                    } catch (IllegalAccessException e) {
+                        if (failFast) {
+                            throw new UtilArgsException("Binding failed for " + field.getName(), e);
+                        }
+                    } catch (UtilArgsException e) {
+                        if (failFast) {
+                            throw e;
+                        }
                     }
                 }
             }
         }
+
         operands = arguments.getOrDefault("--", Collections.singletonList("")).get(0);
+        if (operands.isEmpty()) {
+            operands = operandsResolver.resolve(args, targets);
+        }
         return this;
     }
 

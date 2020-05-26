@@ -165,6 +165,51 @@ class UtilArgsTest {
                 .bind();
     }
 
+    @Test
+    @DisplayName("Quick bind with single flag and String")
+    void case11() {
+        // given
+        String[] args = of("-q", "-n", "bob");
+        TestObject target = new TestObject();
+
+        // when
+        UtilArgs.bind(args, target);
+
+        // then
+        assertThat(target.isQuick()).isTrue();
+        assertThat(target.isVerbose()).isFalse();
+        assertThat(target.getName()).isEqualTo("bob");
+    }
+
+    @Test
+    @DisplayName("Quick bind with single flag")
+    void case12() {
+        // given
+        String[] args = of("-q");
+        TestObject target = new TestObject();
+
+        // when
+        UtilArgs.bind(args, target);
+
+        // then
+        assertThat(target.isQuick()).isTrue();
+        assertThat(target.isVerbose()).isFalse();
+    }
+
+    @Test
+    @DisplayName("Return operands without -- marker")
+    void case13() {
+        // given
+        String[] args = of("-n", "bob", "my", "operands", "123");
+        TestObject target = new TestObject();
+
+        // when
+        UtilArgs utilArgs = UtilArgs.bind(args, target);
+
+        // then
+        assertThat(utilArgs.getOperands()).isEqualTo("my operands 123");
+    }
+
     private String[] of(String... strings) {
         return strings;
     }

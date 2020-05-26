@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * Field annotation used to indicate that this field should be used for automatic
  * argument binding. Value and alternative should be unique within annotated object.
- * Usually value is a single-character. Alternative should be used for long options
+ * Usually value is a single character. Alternative should be used for long options
  * format.
  */
 @Retention(RetentionPolicy.RUNTIME)

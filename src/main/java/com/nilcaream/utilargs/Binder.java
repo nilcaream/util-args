@@ -40,16 +40,18 @@ public class Binder {
      * @throws IllegalAccessException thrown if reflection field setting fails.
      */
     public void bind(Object target, Field field, List<String> values) throws IllegalAccessException {
-        Object value = resolveValue(field.getType(), values);
+        Object value = resolve(values, field.getType());
         if (value != null) {
             field.setAccessible(true);
             field.set(target, value);
         }
     }
 
-    private Object resolveValue(Class<?> cls, List<String> values) {
+    private Object resolve(List<String> values, Class<?> cls) {
         if (values == null || values.isEmpty()) {
             return null;
+        } else if (isBoolean(cls)) {
+            return true;
         } else if (List.class.isAssignableFrom(cls)) {
             return values;
         } else if (Set.class.isAssignableFrom(cls)) {
@@ -58,15 +60,19 @@ public class Binder {
             Class<?> type = cls.getComponentType();
             Object array = Array.newInstance(type, values.size());
             for (int i = 0, size = values.size(); i < size; i++) {
-                Array.set(array, i, ensureType(type, values.get(i)));
+                Array.set(array, i, ensureType(values.get(i), type));
             }
             return array;
         } else {
-            return ensureType(cls, selectValue(values));
+            return ensureType(selectValue(values), cls);
         }
     }
 
-    private Object ensureType(Class<?> cls, String value) {
+    private boolean isBoolean(Class<?> cls) {
+        return cls.equals(boolean.class) || cls.equals(Boolean.class);
+    }
+
+    private Object ensureType(String value, Class<?> cls) {
         Object result = mapper.map(value, cls);
         if (result == null) {
             throw new UtilArgsException("Cannot map " + value + " to " + cls.getName());
