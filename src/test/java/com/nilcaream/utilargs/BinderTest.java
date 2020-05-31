@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -160,6 +161,42 @@ class BinderTest {
 
         // then
         assertThat(target.getIntArray()).containsExactly(10, 0, -31);
+    }
+
+    @Test
+    @DisplayName("Bind set of values of invalid types but fail on cast")
+    @SuppressWarnings("unchecked")
+    void case11() throws NoSuchFieldException, IllegalAccessException {
+        // given
+        TestObject target = new TestObject();
+
+        // when
+        underTest.bind(target, get("doubleSet"), of("value A", "value X", "value Z"));
+
+        // then
+        Set<Double> actual = target.getDoubleSet();
+        assertThat((Set) actual).containsExactly("value A", "value X", "value Z");
+        assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> {
+            Double next = actual.iterator().next();
+        });
+    }
+
+    @Test
+    @DisplayName("Bind list of values of invalid types but fail on cast")
+    @SuppressWarnings("unchecked")
+    void case14() throws NoSuchFieldException, IllegalAccessException {
+        // given
+        TestObject target = new TestObject();
+
+        // when
+        underTest.bind(target, get("integerList"), of("value A", "value X", "value Z"));
+
+        // then
+        List<Integer> actual = target.getIntegerList();
+        assertThat((List) actual).containsExactly("value A", "value X", "value Z");
+        assertThatExceptionOfType(ClassCastException.class).isThrownBy(() -> {
+            Integer next = actual.iterator().next();
+        });
     }
 
     private Field get(String fieldName) throws NoSuchFieldException {

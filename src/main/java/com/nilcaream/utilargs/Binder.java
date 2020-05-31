@@ -75,7 +75,7 @@ public class Binder {
     private Object ensureType(String value, Class<?> cls) {
         Object result = mapper.map(value, cls);
         if (result == null) {
-            throw new UtilArgsException("Cannot map " + value + " to " + cls.getName());
+            throw new UtilArgsException("Cannot map \"" + value + "\" to " + cls.getName());
         } else {
             return result;
         }

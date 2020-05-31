@@ -57,7 +57,19 @@ public class TestObject {
 
     private Set<String> stringSet;
 
+    private List<Integer> integerList;
+
+    private Set<Double> doubleSet;
+
     private int[] intArray;
+
+    public List<Integer> getIntegerList() {
+        return integerList;
+    }
+
+    public Set<Double> getDoubleSet() {
+        return doubleSet;
+    }
 
     public boolean isVerbose() {
         return verbose;
