@@ -151,7 +151,54 @@ class OperandsResolverTest {
         assertThat(operands).isEqualTo("file1 file2");
     }
 
+    @Test
+    @DisplayName("Should not fail on no boolean options")
+    void case10() {
+        // given
+        Object target = new NoBooleans();
+        String[] args = of("-n my-name some other text");
+
+        // when
+        String operands = underTest.resolve(args, target);
+
+        // then
+        assertThat(operands).isEqualTo("some other text");
+    }
+
+    @Test
+    @DisplayName("Should not fail on no options object")
+    void case11() {
+        // given
+        Object target = new Object();
+        String[] args = of("-n my-name some other text");
+
+        // when
+        String operands = underTest.resolve(args, target);
+
+        // then
+        assertThat(operands).isEqualTo("-n my-name some other text");
+    }
+
+    @Test
+    @DisplayName("Should not fail on no options object and no arguments")
+    void case12() {
+        // given
+        Object target = new Object();
+        String[] args = new String[]{};
+
+        // when
+        String operands = underTest.resolve(args, target);
+
+        // then
+        assertThat(operands).isEqualTo("");
+    }
+
     private String[] of(String string) {
         return string.split(" ");
+    }
+
+    public static final class NoBooleans {
+        @Option("n")
+        String name;
     }
 }

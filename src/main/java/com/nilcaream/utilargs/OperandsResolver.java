@@ -37,7 +37,7 @@ public class OperandsResolver {
         Set<String> allAlternatives = findAlternatives(allOptions);
 
         int operandsIndex = 0;
-        Pattern combinedBooleanValuesPattern = Pattern.compile("[" + String.join("", booleanValues) + "]+");
+        Pattern combinedBooleanValuesPattern = booleanValues.isEmpty() ? null : Pattern.compile("[" + String.join("", booleanValues) + "]+");
 
         for (int index = 0, length = args.length; index < length; index++) {
             String arg = args[index];
@@ -57,7 +57,7 @@ public class OperandsResolver {
                 }
             } else if (arg.startsWith("-") && arg.length() > 2) {
                 String key = arg.substring(1);
-                if (combinedBooleanValuesPattern.matcher(key).matches()) { // -cjvf
+                if (combinedBooleanValuesPattern != null && combinedBooleanValuesPattern.matcher(key).matches()) { // -cjvf
                     operandsIndex = index + 1;
                 }
             }
